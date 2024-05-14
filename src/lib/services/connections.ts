@@ -36,6 +36,14 @@ export interface IConnectionServiceApi {
 	 * @returns {Promise<IConnection | null>} A promise that resolves with the retrieved connection, or null if not found.
 	 */
 	getOneConnectionByLabel(label: string): Promise<IConnection | null>;
+
+	/**
+	 * Deletes a connection by its ID.
+	 *
+	 * @param {string} connectionId - The ID of the connection to delete.
+	 * @returns {Promise<IConnection>} A promise that resolves with the deleted connection.
+	 */
+	deleteConnection(connectionId: string): Promise<IConnection>;
 }
 
 export class ConnectionServiceApi extends BaseService implements IConnectionServiceApi {
@@ -43,6 +51,23 @@ export class ConnectionServiceApi extends BaseService implements IConnectionServ
 		super('Connection Service');
 	}
 
+	deleteConnection(connectionId: string): Promise<IConnection> {
+		this.logInfo('Deleting one Connection');
+		try {
+			return ConnectionModel.findByIdAndDelete(connectionId)
+				.lean()
+				.exec()
+				.then((connection) => {
+					if (connection === null) {
+						throw new Error('Connection not found');
+					}
+					return connection;
+				});
+		} catch (error) {
+			this.logInfo('Error while deleting connection');
+			throw error;
+		}
+	}
 	/**
 	 * Retrieves all connections.
 	 *

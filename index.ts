@@ -7,6 +7,8 @@ import { GlobalErrorHandler } from './src/lib/middlewares/error_handler';
 import { ResponseHandler } from './src/lib/middlewares/response_handler';
 import mongoose from 'mongoose';
 import { Databases } from './src/lib/controllers/databases';
+import { Collections } from './src/lib/controllers/collections';
+import cors from 'cors';
 
 /**
  * The main Express app
@@ -48,6 +50,11 @@ app.use(methodOverride.default());
  */
 app.use(ResponseHandler);
 
+/**
+ * Apply the CORS middleware
+ */
+app.use(cors());
+
 
 /**
  * Mounts the Connections router to the app.
@@ -62,6 +69,8 @@ app.use('/connections', new Connections().getRouter());
  * @see {@link Databases.getRouter}
  */
 app.use('/databases', new Databases().getRouter());
+
+app.use('/collections', new Collections().getRouter());
 
 /**
  * Apply the GlobalErrorHandler middleware to handle uncaught errors

@@ -38,8 +38,14 @@ export class Connections extends BaseController {
 		this.router.get('/', this.asyncHandler(this.getAllConnections.bind(this), 'Get All Connections'));
 		this.router.post('/', this.validateAll(createConnectionValidation), this.asyncHandler(this.createConnection.bind(this), 'Create a new Connection'));
 		this.router.get('/:connectionId', this.asyncHandler(this.getOneConnection.bind(this), 'Get One Connection'));
+		this.router.delete('/:connectionId', this.asyncHandler(this.deleteConnection.bind(this), 'Delete One Connection'));
 	}
 
+	async deleteConnection(req: Request, res: Response): Promise<void> {
+		const connectionId = req.params.connectionId;
+		const result = await this.connectionServices.deleteConnection(connectionId);
+		res.sendResponse(200, result);
+	}
 	/**
 	 * Retrieves all connections.
 	 *

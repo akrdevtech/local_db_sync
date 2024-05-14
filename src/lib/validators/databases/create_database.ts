@@ -3,7 +3,10 @@ import Joi from 'joi';
 
 export const createDatabaseSchema: IValidateAllSchema = {
 	body: Joi.object({
-		name: Joi.string().required(),
+		label: Joi.string().required(),
 		description: Joi.string().optional(),
+		dbName: Joi.string().required(),
+		targetDbName: Joi.string().optional(),
+		connection: Joi.string().required(),
 	})
 };

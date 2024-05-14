@@ -20,11 +20,25 @@ export interface IDatabase extends Document {
 	label: string;
 	description?: string;
 	dbName: string;
+	targetDbName?: string;
 	connection: IConnection['_id']; // refers to ConnectionModel
-	lastSyncAt: Date;
+	lastSyncAt?: Date;
 	createdAt: Date;
 	updatedAt?: Date;
 }
+
+
+/**
+ * Interface for a populated Database.
+ *
+ * @interface IConnectionPopulatedDatabase
+ * @extends {IDatabase}
+ * @property {IConnection} connection - The associated connection.
+ */
+export interface IConnectionPopulatedDatabase extends IDatabase {
+	connection: IConnection;
+}
+
 
 /**
  * Mongoose model for a Database.
@@ -45,11 +59,12 @@ export interface IDatabase extends Document {
  * @type {Schema}
  */
 export const DatabaseSchema: Schema = new Schema({
-	label: { type: String, required: true },
+	label: { type: String, required: true, unique: true },
 	description: { type: String, required: false },
 	dbName: { type: String, required: true },
+	targetDbName: { type: String, required: false },
 	connection: { type: Schema.Types.ObjectId, ref: 'Connection', required: true },
-	lastSyncAt: { type: Date, required: true },
+	lastSyncAt: { type: Date, required: false },
 	createdAt: { type: Date, default: Date.now },
 	updatedAt: { type: Date, default: Date.now },
 });
